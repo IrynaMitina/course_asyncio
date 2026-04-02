@@ -1,10 +1,8 @@
-"""
-pip install psutil
+""" benchmark for using green threads (async) in case of high concurrency.
 
-# process.num_ctx_switches() - The number voluntary and involuntary context switches performed by this process (cumulative)
+measures memory footprint, and number of context switching during OS threads management.
 """
-import threading
-import time
+import asyncio
 import psutil
 import os
 
@@ -14,17 +12,14 @@ process = psutil.Process(os.getpid())
 memory_initial = process.memory_info().rss
 
 
-def worker():
-    time.sleep(5)
+async def worker():
+    await asyncio.sleep(5)
 
-threads = []
-for _ in range(N):
-    t = threading.Thread(target=worker)
-    t.start()
-    threads.append(t)
+async def main():
+    tasks = [asyncio.create_task(worker()) for _ in range(N)]
+    await asyncio.gather(*tasks)
 
-for t in threads:
-    t.join()
+asyncio.run(main())
 
 memory = process.memory_info().rss  # rss memory in bytes
 ctx_switches = process.num_ctx_switches()  # number of context switches voluntary and involuntary , cumulative
