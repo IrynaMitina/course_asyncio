@@ -13,14 +13,18 @@ from time import time
 from concurrent.futures import ProcessPoolExecutor
 import asyncio
 from fastapi import FastAPI
+import aiodebug.log_slow_callbacks
+aiodebug.log_slow_callbacks.enable(2)
+
 
 app = FastAPI()
 
 @app.on_event("startup")
 async def enable_slow_tasks_logging():
-    event_loop = asyncio.get_running_loop()
-    event_loop.set_debug(True)  # enable debug mode for event loop
-    event_loop.slow_callback_duration = 2  # in sec. - log only tasks that block event loop for more than X sec
+    pass
+    #event_loop = asyncio.get_running_loop()
+    #event_loop.set_debug(True)  # enable debug mode for event loop
+    #event_loop.slow_callback_duration = 2  # in sec. - log only tasks that block event loop for more than X sec
 
 
 ################################################ CPU-heavy endpoints
