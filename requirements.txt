@@ -1,0 +1,8 @@
+requests
+aiohttp
+fastapi 
+uvicorn
+psutil
+pytest
+pytest-asyncio
+scalene
