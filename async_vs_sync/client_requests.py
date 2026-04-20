@@ -4,10 +4,13 @@ import requests
 URLs = ["http://google.com", "https://httpbin.org/delay/2", "https://httpbin.org/delay/1"]
 
 def fetch(url):
+    print(f"requesting url={url}")
     res = requests.get(url)
     if 200 != res.status_code:
         raise Exception(f"ERROR: failed to get url={url}")
-    return res.text
+    res_text = res.text
+    print(f"got response for url={url}")
+    return res_text
 
 def main():
     results = []

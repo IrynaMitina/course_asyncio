@@ -5,10 +5,13 @@ import time
 URLs = ["http://google.com", "https://httpbin.org/delay/2", "https://httpbin.org/delay/1"]
 
 async def fetch(url):
+    print(f"requesting url={url}")
     async with aiohttp.request('GET', url) as response:
         if 200 != response.status:
             response.raise_for_status()
-        return await response.text()
+        resp_text = await response.text()
+        print(f"got response for url={url}")
+        return resp_text
 
 async def main():    
     # create tasks on event loop - to execute fetches concurrently
