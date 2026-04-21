@@ -2,7 +2,7 @@
 
 Set breakpoints in both coroutines after 'await' line 
 (place where execution resumes).
-Run debugging, press step over each time execution stops.
+Run debugging, press 'step over' each time execution stops.
 """
 import asyncio
 
