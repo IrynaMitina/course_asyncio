@@ -1,10 +1,12 @@
-import asyncio
+import aiosqlite
 
 
 async def fetch_user(user_id: int) -> dict:
-    # imagine this calls DB or external API to get user by id
-    await asyncio.sleep(0.1)
-    return {"id": user_id, "name": "Alice"}
+    async with aiosqlite.connect('users.db') as conn:
+        conn.row_factory = aiosqlite.Row
+        async with conn.execute(f'SELECT id, name, email FROM users where id={user_id};') as cursor:
+            row = await cursor.fetchone()  # row is tuple
+    return dict(row)  # {"id": .., "name": .., "email":..}
 
 
 async def get_user_name(user_id: int) -> str:
