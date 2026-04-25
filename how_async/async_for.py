@@ -1,4 +1,9 @@
-"""use 'async for' to iterate over asynchronous generator or iterator."""
+"""This is to demo execution flow during async iteration.
+
+Prints were added to highlight execution flow.
+Run script with `python async_for.py` and analyze the output.
+Notice how during iteration in 'async for' loop - execution switches from 
+generator to iterator (and back), and to other coroutines."""
 import asyncio
 import random
 
@@ -6,8 +11,10 @@ import random
 # custom async generator
 async def async_generator(n):
     for _ in range(n):
-        yield random.randint(0, 100)
+        print("gen: suspending")
         await asyncio.sleep(0.5)  # simulate waiting for next value to arrive
+        print("gen: resuming")
+        yield random.randint(0, 100)
 
 
 # custom async iterator
@@ -22,17 +29,34 @@ class AsyncIterator:
         if self.i <= 0:
             raise StopAsyncIteration
         self.i -= 1
+        print("iter: suspending")
         await asyncio.sleep(0.5)  # simulate waiting for next value to arrive
+        print("iter: resuming")
         return random.randint(0, 100)
 
 
-async def main():
-    print("using async generator:")
+async def coro_iterate_generator():
     async for x in async_generator(5):
-        print(x)
-    print("using async iterator:")    
-    async for x in AsyncIterator(5):
-        print(x)
+        print(f"gen {x}")
 
+
+async def coro_iterate_iterator():
+    async for x in AsyncIterator(5):
+        print(f"iter {x}")
+
+
+async def coro_sleep(name):
+    print(f"coro '{name}'")
+    await asyncio.sleep(1)
+
+
+async def main():
+    await asyncio.gather(
+        coro_iterate_generator(),
+        coro_sleep("Jerry"),
+        coro_iterate_iterator(),
+        coro_sleep("Tom"),
+        coro_sleep("Clara")
+    )
 
 asyncio.run(main())
