@@ -82,7 +82,7 @@ def compare_cpu_heavy_endpoints():
 
 
 if __name__=='__main__':
-    op = sys.argv[1]
+    op = sys.argv[1] if len(sys.argv) > 1 else None
     if 'io' == op:
         compare_io_heavy_endpoints()
     elif 'cpu' == op:  # 'cpu' 
