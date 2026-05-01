@@ -36,27 +36,19 @@ class AsyncIterator:
 
 
 async def coro_iterate_generator():
-    async for x in async_generator(5):
+    async for x in async_generator(3):
         print(f"gen {x}")
 
 
 async def coro_iterate_iterator():
-    async for x in AsyncIterator(5):
+    async for x in AsyncIterator(3):
         print(f"iter {x}")
-
-
-async def coro_sleep(name):
-    print(f"coro '{name}'")
-    await asyncio.sleep(1)
 
 
 async def main():
     await asyncio.gather(
         coro_iterate_generator(),
-        coro_sleep("Jerry"),
-        coro_iterate_iterator(),
-        coro_sleep("Tom"),
-        coro_sleep("Clara")
+        coro_iterate_iterator()
     )
 
 asyncio.run(main())
